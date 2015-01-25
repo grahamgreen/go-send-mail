@@ -1,14 +1,22 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"os"
 
 	"github.com/robfig/config"
 	"github.com/sendgrid/sendgrid-go"
 )
 
 func main() {
-	c, _ := config.ReadDefault("mail.conf")
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage:\n %s [options] ip\n\nOptions:\n", os.Args[0])
+		flag.PrintDefaults()
+	}
+	config_file := flag.String("config", "mail.conf", "path to the config file")
+	flag.Parse()
+	c, _ := config.ReadDefault(*config_file)
 	user, _ := c.String("sendgrid", "user")
 	key, _ := c.String("sendgrid", "key")
 	to, _ := c.String("sendgrid", "to")
